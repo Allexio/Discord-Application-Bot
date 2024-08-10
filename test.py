@@ -13,6 +13,7 @@ ROLE_TO_JOIN = getenv("ROLE_TO_JOIN")
 
 bot = discord.Bot()
 
+
 @bot.event
 async def on_ready():
     print(f"I have successfully logged in as {bot.user}")
@@ -24,7 +25,7 @@ async def apply(ctx):
         \n- This is not for the sole purpose of playing the game more often \
         \n- You will be expected to join in on at least some testing events \
         \n- If you do not participate in testing or provide feedback, your privileges may be revoked\n\n"
-    
+
     await ctx.respond(warning_text, view=application_confirm_view(), ephemeral=True)
 
 
@@ -58,7 +59,6 @@ class apply_modal(discord.ui.Modal):
         application_embed.add_field(name="Timezone", value=str(timezone), inline=True)
         application_embed.add_field(name="Commitment", value=str(commitment) + " (hours per month)", inline=True)
 
-        application_embed.set_footer(text="Bot developed by Allexio")
         application_embed.set_thumbnail(url=user_avatar)
 
         # Get the channel in whch the application summary is going to be posted
@@ -81,7 +81,6 @@ class application_confirm_view(discord.ui.View):
 
     @discord.ui.button(label="I understand", style=discord.ButtonStyle.success)
     async def confirm_button_callback(self, apply, interaction):
-        
         await interaction.response.send_modal(apply_modal(title="Apply for internal tester position"))
 
 
