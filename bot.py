@@ -10,6 +10,8 @@ TOKEN = getenv("TOKEN")
 APPLICATION_REVIEW_CHANNEL_ID = int(getenv("APPLICATION_REVIEW_CHANNEL_ID"))
 # role to be given out if the application is accepted
 ROLE_TO_JOIN = getenv("ROLE_TO_JOIN")
+# tester channel
+TESTER_CHANNEL = int(getenv("TESTER_CHANNEL"))
 
 bot = discord.Bot()
 
@@ -18,6 +20,8 @@ bot = discord.Bot()
 async def on_ready():
     print(f"I have successfully logged in as {bot.user}")
 
+
+# ------------------------------ Application Management
 
 @bot.slash_command(name="apply-for-internal-tester", description="Apply to become an internal tester")
 async def apply(ctx):
@@ -30,6 +34,7 @@ async def apply(ctx):
 
 
 class apply_modal(discord.ui.Modal):
+    """Defines the application form and what happens when you click submit"""
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
@@ -75,6 +80,7 @@ class apply_modal(discord.ui.Modal):
 
 
 class application_confirm_view(discord.ui.View):
+    """Defines the confirmation message when applying"""
     @discord.ui.button(label="Nevermind", style=discord.ButtonStyle.danger)
     async def cancel_button_callback(self, apply, interaction):
         await interaction.response.send_message("You cancelled your application.", ephemeral=True)
@@ -82,6 +88,31 @@ class application_confirm_view(discord.ui.View):
     @discord.ui.button(label="I understand", style=discord.ButtonStyle.success)
     async def confirm_button_callback(self, apply, interaction):
         await interaction.response.send_modal(apply_modal(title="Apply for internal tester position"))
+
+# ------------------------------ Statistics command
+
+
+@bot.slash_command(name="statistics", description="Messages sent per user in testing group")
+async def statistics(ctx):
+
+    result_dict = {}
+    channel = bot.get_channel(TESTER_CHANNEL)
+    async for message in channel.history():
+        key = message.author.display_name + " (" + str(message.author.id) + ")"
+        if key not in result_dict:
+            result_dict[key] = 1
+        else:
+            result_dict[key] += 1
+
+    # sort dictionary
+    result_dict = dict(sorted(result_dict.items(), key=lambda item: item[1]))
+
+    # print it prettily
+    result_summary = ""
+    for key in result_dict:
+        result_summary += key + ": " + str(result_dict[key]) + "\n"
+
+    await ctx.respond(result_summary, ephemeral=True)
 
 
 # launch the bot
