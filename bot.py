@@ -105,13 +105,14 @@ async def statistics(ctx):
     role_to_monitor = bot.get_guild(MONITORED_SERVER).get_role(MONITORED_ROLE)
     role_members = role_to_monitor.members
     for member in role_members:
-        key = member.display_name + " (" + str(member.id) + ")"
+        key = member.display_name + " (" + str(member.id) + " joined " + str(member.joined_at.date()) + ")"
         result_dict[key] = 0
 
     # get the number of messages per user in the monitored channel
     channel = bot.get_channel(MONITORED_CHANNEL)
     async for message in channel.history(limit=10000):
-        key = message.author.display_name + " (" + str(message.author.id) + ")"
+        key = message.author.display_name + " (" + str(message.author.id) + " joined " + str(member.joined_at.date()) + ")"
+        # ignore users who are not monitored
         if key in result_dict:
             result_dict[key] += 1
 
