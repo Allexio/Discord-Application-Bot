@@ -1,14 +1,14 @@
 # Prerequisites
 You will need:
-- pycord (latest)
-- dotenv (latest)
-- Python > 3.8
+- [pycord](https://pycord.dev/) (latest)
+- [dotenv](https://pypi.org/project/python-dotenv/) (latest)
+- [Python](https://www.python.org/) > 3.8
 
 # Configuration
 Config is entirely done by setting up an env file which should ahve the following fields:
-- TOKEN -> the token of your bot as obtained from the discord developer portal
-- APPLICATION_REVIEW_CHANNEL_ID -> where the application summaries will be sent once submitted
-- MONITORED_CHANNEL -> the channel that will be monitored for activity
+- `TOKEN` -> the token of your bot as obtained from the discord developer portal
+- `APPLICATION_REVIEW_CHANNEL_ID` -> where the application summaries will be sent once submitted
+- `MONITORED_CHANNEL` -> the channel that will be monitored for activity
 
 # Execution
 All you need to execute the bot is python > 3.8.
