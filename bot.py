@@ -10,8 +10,8 @@ TOKEN = getenv("TOKEN")
 APPLICATION_REVIEW_CHANNEL_ID = int(getenv("APPLICATION_REVIEW_CHANNEL_ID"))
 # role to be given out if the application is accepted
 ROLE_TO_JOIN = getenv("ROLE_TO_JOIN")
-# tester channel
-TESTER_CHANNEL = int(getenv("TESTER_CHANNEL"))
+# Monitored channel
+MONITORED_CHANNEL = int(getenv("MONITORED_CHANNEL"))
 
 bot = discord.Bot()
 
@@ -96,7 +96,7 @@ class application_confirm_view(discord.ui.View):
 async def statistics(ctx):
 
     result_dict = {}
-    channel = bot.get_channel(TESTER_CHANNEL)
+    channel = bot.get_channel(MONITORED_CHANNEL)
     async for message in channel.history():
         key = message.author.display_name + " (" + str(message.author.id) + ")"
         if key not in result_dict:
