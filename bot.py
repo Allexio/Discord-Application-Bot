@@ -110,7 +110,7 @@ async def statistics(ctx):
     channel = bot.get_channel(MONITORED_CHANNEL)
     async for message in channel.history(limit=10000):
         key = message.author.display_name + " (" + str(message.author.id) + " joined " + str(member.joined_at.date()) + ")"
-        # ignore users who are not monitored
+        # ignore users who are not in the monitored role
         if key in result_dict:
             result_dict[key] += 1
 
