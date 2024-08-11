@@ -23,7 +23,7 @@ async def on_ready():
 
 # ------------------------------ Application Management
 
-@bot.slash_command(name="apply-for-internal-tester", description="Apply to become an internal tester")
+@bot.slash_command(name="apply", description="Apply to become an internal tester")
 async def apply(ctx):
     warning_text = "Please confirm that you understand that:\n\
         \n- This is not for the sole purpose of playing the game more often \
