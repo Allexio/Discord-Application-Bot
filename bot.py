@@ -7,7 +7,7 @@ dotenv.load_dotenv()
 # the bot's auth token
 TOKEN = getenv("TOKEN")
 # channel in which moderators will see applications
-APPLICATION_REVIEW_CHANNEL_ID = int(getenv("APPLICATION_REVIEW_CHANNEL_ID"))
+APPLICATION_REVIEW_CHANNEL = int(getenv("APPLICATION_REVIEW_CHANNEL"))
 # role to be given out if the application is accepted
 ROLE_TO_JOIN = getenv("ROLE_TO_JOIN")
 # Monitored server ID
@@ -71,7 +71,7 @@ class apply_modal(discord.ui.Modal):
         application_embed.set_thumbnail(url=user_avatar)
 
         # Get the channel in whch the application summary is going to be posted
-        channel = bot.get_channel(APPLICATION_REVIEW_CHANNEL_ID)
+        channel = bot.get_channel(APPLICATION_REVIEW_CHANNEL)
 
         # Post the application summary embed
         app_message = await channel.send(embed=application_embed)

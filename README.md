@@ -18,7 +18,7 @@ You will need:
 ## Configuration
 Config is entirely done by setting up an env file which should have the following fields:
 - `TOKEN` -> the token of your bot as obtained from the discord developer portal
-- `APPLICATION_REVIEW_CHANNEL_ID` -> where the application summaries will be sent once submitted
+- `APPLICATION_REVIEW_CHANNEL` -> the ID of the channel where application summaries will be sent once submitted
 - `MONITORED_SERVER` -> the ID of the server on which you want to execute the bot
 - `MONITORED_CHANNEL` -> the ID of the channel that will be monitored for activity
 - `MONITORED_ROLE` -> the ID of the role that will be monitored for activity
