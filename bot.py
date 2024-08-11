@@ -10,8 +10,12 @@ TOKEN = getenv("TOKEN")
 APPLICATION_REVIEW_CHANNEL_ID = int(getenv("APPLICATION_REVIEW_CHANNEL_ID"))
 # role to be given out if the application is accepted
 ROLE_TO_JOIN = getenv("ROLE_TO_JOIN")
+# Monitored server ID
+MONITORED_SERVER = int(getenv("MONITORED_SERVER"))
 # Monitored channel
 MONITORED_CHANNEL = int(getenv("MONITORED_CHANNEL"))
+# Monitored role
+MONITORED_ROLE = int(getenv("MONITORED_ROLE"))
 
 bot = discord.Bot()
 
@@ -96,12 +100,19 @@ class application_confirm_view(discord.ui.View):
 async def statistics(ctx):
 
     result_dict = {}
+
+    # get all the users who need to be monitored
+    role_to_monitor = bot.get_guild(MONITORED_SERVER).get_role(MONITORED_ROLE)
+    role_members = role_to_monitor.members
+    for member in role_members:
+        key = member.display_name + " (" + str(member.id) + ")"
+        result_dict[key] = 0
+
+    # get the number of messages per user in the monitored channel
     channel = bot.get_channel(MONITORED_CHANNEL)
-    async for message in channel.history():
+    async for message in channel.history(limit=10000):
         key = message.author.display_name + " (" + str(message.author.id) + ")"
-        if key not in result_dict:
-            result_dict[key] = 1
-        else:
+        if key in result_dict:
             result_dict[key] += 1
 
     # sort dictionary
@@ -113,7 +124,6 @@ async def statistics(ctx):
         result_summary += key + ": " + str(result_dict[key]) + "\n"
 
     await ctx.respond(result_summary, ephemeral=True)
-
 
 # launch the bot
 bot.run(TOKEN)
