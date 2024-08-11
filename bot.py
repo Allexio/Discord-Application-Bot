@@ -8,8 +8,6 @@ dotenv.load_dotenv()
 TOKEN = getenv("TOKEN")
 # channel in which moderators will see applications
 APPLICATION_REVIEW_CHANNEL = int(getenv("APPLICATION_REVIEW_CHANNEL"))
-# role to be given out if the application is accepted
-ROLE_TO_JOIN = getenv("ROLE_TO_JOIN")
 # Monitored server ID
 MONITORED_SERVER = int(getenv("MONITORED_SERVER"))
 # Monitored channel
