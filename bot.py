@@ -32,7 +32,7 @@ async def apply(ctx):
         \n- You will be expected to join in on at least some testing events \
         \n- If you do not participate in testing or provide feedback, your privileges may be revoked\n\n"
 
-    await ctx.respond(warning_text, view=application_confirm_view(), ephemeral=True)
+    await ctx.respond(warning_text, view=application_confirm_view(), ephemeral=True, delete_after=60)
 
 
 class apply_modal(discord.ui.Modal):
