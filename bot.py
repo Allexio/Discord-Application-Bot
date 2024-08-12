@@ -68,7 +68,7 @@ class apply_modal(discord.ui.Modal):
         )
         application_embed.add_field(name="Age", value=str(age))
         application_embed.add_field(name="Timezone", value=str(timezone), inline=True)
-        application_embed.add_field(name="Commitment", value=str(commitment) + " (hours per month)", inline=True)
+        application_embed.add_field(name="Commitment", value=str(commitment) + " (hours / month)", inline=True)
         application_embed.add_field(name="User ID", value=str(interaction.user.id), inline=True)
         application_embed.add_field(name="Joined Discord", value=str(interaction.user.created_at.date()), inline=True)
 
