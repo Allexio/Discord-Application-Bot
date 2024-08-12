@@ -51,7 +51,7 @@ class apply_modal(discord.ui.Modal):
     async def callback(self, interaction: discord.Interaction):
         age = self.children[0].value
         timezone = self.children[1].value
-        justification = self.children[2].value
+        motivation = self.children[2].value
         experience = self.children[3].value
         commitment = self.children[4].value
 
@@ -63,13 +63,12 @@ class apply_modal(discord.ui.Modal):
         # create a neat little embed
         application_embed = discord.Embed(
             title=application_title,
-            description=justification,
+            description="**Motivation**\n" + motivation + "\n\n**Experience**\n" + experience,
             color=discord.Colour.blurple(),
         )
         application_embed.add_field(name="Age", value=str(age))
         application_embed.add_field(name="Timezone", value=str(timezone), inline=True)
         application_embed.add_field(name="Commitment", value=str(commitment) + " (hours per month)", inline=True)
-        application_embed.add_field(name="Experience", value=str(experience))
         application_embed.add_field(name="User ID", value=str(interaction.user.id), inline=True)
         application_embed.add_field(name="Joined Discord", value=str(interaction.user.created_at.date()), inline=True)
 
@@ -111,7 +110,7 @@ class application_manage_view(discord.ui.View):
         await self.message.edit(view=self)
 
         # Get the candidate ID from the application summary
-        candidate_id = self.reject_button_callback.view.message.embeds[0].fields[4].value
+        candidate_id = self.reject_button_callback.view.message.embeds[0].fields[3].value
 
         # Send the user a congratulations message
         rejection_message = "Hi and thank you for applying to become an internal tester for EXFIL.\
@@ -120,7 +119,7 @@ class application_manage_view(discord.ui.View):
         user = await bot.fetch_user(candidate_id)
         await user.send(rejection_message)
 
-        await interaction.response.send_message("<@" + str(interaction.user.id) + "> rejected the application for candidate <@" + str(user.id) + ">.")
+        await interaction.response.send_message("<@" + str(interaction.user.id) + "> rejected <@" + str(user.id) + ">'s application.")
 
     @discord.ui.button(label="Accept", custom_id="accept-button", style=discord.ButtonStyle.success)
     async def accept_button_callback(self, apply, interaction):
@@ -128,7 +127,7 @@ class application_manage_view(discord.ui.View):
         await self.message.edit(view=self)
 
         # Get the candidate ID from the application summary
-        candidate_id = int(self.accept_button_callback.view.message.embeds[0].fields[4].value)
+        candidate_id = int(self.accept_button_callback.view.message.embeds[0].fields[3].value)
 
         # get server info
         guild = bot.get_guild(MONITORED_SERVER)
@@ -144,7 +143,7 @@ class application_manage_view(discord.ui.View):
         user = await bot.fetch_user(candidate_id)
         await user.send(congrats_message)
 
-        await interaction.response.send_message("<@" + str(interaction.user.id) + "> accepted the application for candidate <@" + str(user.id) + ">.")
+        await interaction.response.send_message("<@" + str(interaction.user.id) + "> accepted <@" + str(user.id) + ">'s application.")
 
 # ------------------------------ Statistics command
 
