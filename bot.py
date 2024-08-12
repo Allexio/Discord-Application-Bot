@@ -109,8 +109,18 @@ class application_manage_view(discord.ui.View):
     async def reject_button_callback(self, apply, interaction):
         self.disable_all_items()
         await self.message.edit(view=self)
-        candidate_id = self.reject_button_callback.view.message.embeds[0].fields[3].value
-        await interaction.response.send_message("<@" + str(interaction.user.id) + "> rejected the application.")
+
+        # Get the candidate ID from the application summary
+        candidate_id = self.reject_button_callback.view.message.embeds[0].fields[4].value
+
+        # Send the user a congratulations message
+        rejection_message = "Hi and thank you for applying to become an internal tester for EXFIL.\
+        \nAfter careful consideration of your profile we have decided to not move forward with your application at this time.\
+        \nFeel free to contact a moderator if you have any further questions."
+        user = await bot.fetch_user(candidate_id)
+        await user.send(rejection_message)
+
+        await interaction.response.send_message("<@" + str(interaction.user.id) + "> rejected the application for candidate <@" + str(user.id) + ">.")
 
     @discord.ui.button(label="Accept", custom_id="accept-button", style=discord.ButtonStyle.success)
     async def accept_button_callback(self, apply, interaction):
@@ -134,7 +144,7 @@ class application_manage_view(discord.ui.View):
         user = await bot.fetch_user(candidate_id)
         await user.send(congrats_message)
 
-        await interaction.response.send_message("<@" + str(interaction.user.id) + "> accepted the application for candidate " + user.display_name + ".")
+        await interaction.response.send_message("<@" + str(interaction.user.id) + "> accepted the application for candidate <@" + str(user.id) + ">.")
 
 # ------------------------------ Statistics command
 
