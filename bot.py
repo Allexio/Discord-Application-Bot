@@ -8,6 +8,8 @@ dotenv.load_dotenv()
 TOKEN = getenv("TOKEN")
 # channel in which moderators will see applications
 APPLICATION_REVIEW_CHANNEL = int(getenv("APPLICATION_REVIEW_CHANNEL"))
+# Role to give to users who succeed with their application
+ROLE_TO_GIVE = int(getenv("ROLE_TO_GIVE"))
 # Monitored server ID
 MONITORED_SERVER = int(getenv("MONITORED_SERVER"))
 # Monitored channel
@@ -43,13 +45,15 @@ class apply_modal(discord.ui.Modal):
         self.add_item(discord.ui.InputText(label="How old are you?", required=True))
         self.add_item(discord.ui.InputText(label="What is your timezone? (in UTC format)", required=True))
         self.add_item(discord.ui.InputText(label="Why do you want to be an internal tester?", required=True, style=discord.InputTextStyle.long))
+        self.add_item(discord.ui.InputText(label="Do you have any previous tester experience?", required=True, style=discord.InputTextStyle.long))
         self.add_item(discord.ui.InputText(label="How many hours per month can you commit?", required=True))
 
     async def callback(self, interaction: discord.Interaction):
         age = self.children[0].value
         timezone = self.children[1].value
         justification = self.children[2].value
-        commitment = self.children[3].value
+        experience = self.children[3].value
+        commitment = self.children[4].value
 
         user = await bot.fetch_user(interaction.user.id)
         user_avatar = user.avatar.url
@@ -65,6 +69,9 @@ class apply_modal(discord.ui.Modal):
         application_embed.add_field(name="Age", value=str(age))
         application_embed.add_field(name="Timezone", value=str(timezone), inline=True)
         application_embed.add_field(name="Commitment", value=str(commitment) + " (hours per month)", inline=True)
+        application_embed.add_field(name="Experience", value=str(experience))
+        application_embed.add_field(name="User ID", value=str(interaction.user.id), inline=True)
+        application_embed.add_field(name="Joined Discord", value=str(interaction.user.created_at.date()), inline=True)
 
         application_embed.set_thumbnail(url=user_avatar)
 
@@ -72,7 +79,7 @@ class apply_modal(discord.ui.Modal):
         channel = bot.get_channel(APPLICATION_REVIEW_CHANNEL)
 
         # Post the application summary embed
-        app_message = await channel.send(embed=application_embed)
+        app_message = await channel.send(view=application_manage_view(), embed=application_embed)
 
         # Create a thread on it so people can exchange in a nice and clean environment
         await channel.create_thread(name=application_title, message=app_message, auto_archive_duration=60, type=discord.ChannelType.public_thread, reason=None)
@@ -83,6 +90,7 @@ class apply_modal(discord.ui.Modal):
 
 class application_confirm_view(discord.ui.View):
     """Defines the confirmation message when applying"""
+
     @discord.ui.button(label="Nevermind", style=discord.ButtonStyle.danger)
     async def cancel_button_callback(self, apply, interaction):
         await interaction.response.send_message("You cancelled your application.", ephemeral=True)
@@ -90,6 +98,43 @@ class application_confirm_view(discord.ui.View):
     @discord.ui.button(label="I understand", style=discord.ButtonStyle.success)
     async def confirm_button_callback(self, apply, interaction):
         await interaction.response.send_modal(apply_modal(title="Apply for internal tester position"))
+
+
+class application_manage_view(discord.ui.View):
+    """Adds button to application summary so admins/moderators can accept or reject candidates quicker"""
+    def __init__(self):
+        super().__init__(timeout=None)  # timeout of the view must be set to None
+
+    @discord.ui.button(label="Reject", custom_id="reject-button", style=discord.ButtonStyle.danger)
+    async def reject_button_callback(self, apply, interaction):
+        self.disable_all_items()
+        await self.message.edit(view=self)
+        candidate_id = self.reject_button_callback.view.message.embeds[0].fields[3].value
+        await interaction.response.send_message("<@" + str(interaction.user.id) + "> rejected the application.")
+
+    @discord.ui.button(label="Accept", custom_id="accept-button", style=discord.ButtonStyle.success)
+    async def accept_button_callback(self, apply, interaction):
+        self.disable_all_items()
+        await self.message.edit(view=self)
+
+        # Get the candidate ID from the application summary
+        candidate_id = int(self.accept_button_callback.view.message.embeds[0].fields[4].value)
+
+        # get server info
+        guild = bot.get_guild(MONITORED_SERVER)
+        # add role to candidate
+        await guild.get_member(candidate_id).add_roles(guild.get_role(ROLE_TO_GIVE))
+
+        # Send the user a congratulations message
+        congrats_message = "Hi and thank you for applying to become an internal tester for EXFIL.\
+        \nAfter careful consideration of your profile we have decided to accept your application.\
+        \n\n:tada: Congratulations and welcome to the team! :tada:\
+        \n\nYou should now have access to an extra channel in the server where you can interact with other testers.\
+        \n\nWe are glad to have you on board and hope you can provide the team with valuable feedback!"
+        user = await bot.fetch_user(candidate_id)
+        await user.send(congrats_message)
+
+        await interaction.response.send_message("<@" + str(interaction.user.id) + "> accepted the application for candidate " + user.display_name + ".")
 
 # ------------------------------ Statistics command
 
