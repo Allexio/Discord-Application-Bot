@@ -24,5 +24,4 @@ Config is entirely done by setting up an env file which should have the followin
 - `MONITORED_ROLE` -> the ID of the role that will be monitored for activity
 
 ## Execution
-All you need to execute the bot is python > 3.8.
 Simply execute the bot.py file with `python bot.py` or `python3 bot.py` (while you are in the same directory as the file of course)
