@@ -11,7 +11,7 @@ async def on_ready():
 # ------------------------------ Application Management
 
 
-@bot.slash_command(name="apply", description="Apply to become an internal tester")
+@bot.slash_command(name="apply", description=cfg.APPLICATION_COMMAND_DESCRIPTION)
 async def apply(ctx):
     warning_text = cfg.WARNING_MESSAGE
 
@@ -41,7 +41,7 @@ class apply_modal(discord.ui.Modal):
         user = await bot.fetch_user(interaction.user.id)
         user_avatar = user.avatar.url
 
-        application_title = "Internal Testing Application - " + user.display_name
+        application_title = "Application - " + user.display_name
 
         # create a neat little embed
         application_embed = discord.Embed(

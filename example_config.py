@@ -13,6 +13,8 @@ APPLICATION_REVIEW_CHANNEL = 0000000000000000000
 # Role ID to give to people whose applications you accept (should be a numerical value)
 ROLE_TO_GIVE = 0000000000000000000
 
+APPLICATION_COMMAND_DESCRIPTION = "Apply to become a Helldiver"
+
 # Warning to give to user when he applies
 WARNING_MESSAGE = "Please confirm that you understand that:\n\
         \n- This is not for the sole purpose of playing the game more often \
