@@ -23,17 +23,13 @@ It will then send an ephemeral (visible only to the user who launched the comman
 ## Prerequisites
 You will need:
 - [pycord](https://pycord.dev/) (latest)
-- [dotenv](https://pypi.org/project/python-dotenv/) (latest)
 - [Python](https://www.python.org/) > 3.8
 
 ## Configuration
-Config is entirely done by setting up an env file which should have the following fields:
-- `TOKEN` -> the token of your bot as obtained from the discord developer portal
-- `APPLICATION_REVIEW_CHANNEL` -> the ID of the channel where application summaries will be sent once submitted
-- `ROLE_TO_GIVE` -> the ID of the role to give to a candidate who is accepted
-- `MONITORED_SERVER` -> the ID of the server on which you want to execute the bot
-- `MONITORED_CHANNEL` -> the ID of the channel that will be monitored for activity
-- `MONITORED_ROLE` -> the ID of the role that will be monitored for activity
+Config is entirely done by setting up a python `config.py` file.
+You can find an example config file in the same directory as the bot named `example_config.py`.
+All the fields should be explained in comments in the file.
+Simply rename the file to `config.py` and add in all the missing information or feel free to modify the default contents.
 
 ## Execution
 Simply execute the bot.py file with `python bot.py` or `python3 bot.py` (while you are in the same directory as the file of course)
